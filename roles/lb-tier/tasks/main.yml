@@ -15,8 +15,9 @@
     src: haproxy.cfg.j2
     dest: /etc/haproxy/haproxy.cfg
     mode: 0644
+  notify: restart "{{ load_balancer }}"
 
-- name: Start {{ load_balancer }}
-  service:
-    name: "{{ load_balancer }}"
-    state: restarted
+#- name: Start {{ load_balancer }}
+#  service:
+#    name: "{{ load_balancer }}"
+#    state: restarted
