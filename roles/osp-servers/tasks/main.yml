@@ -2,9 +2,66 @@
 
 # tasks file for osp.servers
 - name: Create new server instances and attaches them a network and passes metadata to the instance
+  os_server:
+    cloud:            "{{ instance.cloud | default(default_cloud) | default('ospcloud') }}"
+    state:            "{{ instance.state }}"
+    name:             "{{ instance.name }}"
+    image:            "{{ instance.image }}"
+    meta:             "group={{ instance.group }},deployment_name={{ instance.deployment }}"
+    flavor:           "{{ instance.flavor }}"
+    security_groups:  "{{ instance.security_group }}"
+    key_name:         "{{ instance.key_name }}"
+    wait: yes
+    nics:
+    - net-name: int_network
+    userdata: |
+      #!/bin/bash
+      curl -o /tmp/openstack.pub http://www.opentlc.com/download/ansible_bootcamp/openstack_keys/openstack.pub
+      cat /tmp/openstack.pub >> /home/cloud-user/.ssh/authorized_keys
+      curl -o /tmp/internal.repo http://www.opentlc.com/download/ansible_bootcamp/repo/internal.repo
+      cp /tmp/internal.repo /etc/yum.repos.d/internal.repo
+  loop: "{{ osp_servers }}"      
+  loop_control:
+    loop_var: instance
+  async: 900
+  poll: 0
+  register: r_instances
+
+- name: Wait for OSP instance creation to complete
+  async_status: jid={{ item.ansible_job_id }}
+  register: r_wait
+  until: r_wait.finished
+  retries: 900
+  loop: "{{ r_instances.results }}"
+
+- name: Output instances name
+  debug:
+    msg: "Server is {{ item.instance.instance_name }}"
+  loop: "{{ r_instances.results }}"
+
+
 
 
 - name: Add floating IP to Servers
-   
+  os_floating_ip:
+    cloud: ospcloud
+    state: present
+    reuse: yes
+    server: "{{ item.instance.instance_name }}"
+    network: ext_network
+    wait: true
+    timeout: 180
+  loop: "{{ r_instances.results }}"
+  register: r_floating_ips   
+
+
+
 
 - name: Wait for server to be available
+  wait_for:
+    host: "{{ item.floating_ip.floating_ip_address }}"
+    port: 22
+    search_regex: OpenSSH
+    timeout: 600
+  loop: "{{ r_floating_ips.results }}"
+  delegate_to: "{{ inventory_hostname }}"
