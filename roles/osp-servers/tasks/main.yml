@@ -7,7 +7,7 @@
     state:            "{{ instance.state }}"
     name:             "{{ instance.name }}"
     image:            "{{ instance.image }}"
-    meta:             "group={{ instance.group }},deployment_name={{ instance.deployment }}"
+#    meta:             "group={{ instance.group }},deployment_name={{ instance.deployment }}"
     flavor:           "{{ instance.flavor }}"
     security_groups:  "{{ instance.security_group }}"
     key_name:         "{{ instance.key_name }}"
