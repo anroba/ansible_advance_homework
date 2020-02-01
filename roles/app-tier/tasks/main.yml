@@ -1,13 +1,12 @@
 ---
-- name: Install {{ app-tier }}
-  package:
-#  yum:
-    name: "{{ app-tier }}"
+- name: Install {{ app_tier }}
+  yum:
+    name: "{{ app_tier }}"
     state: latest
 
-- name: enable {{ app-tier }} at boot
+- name: enable {{ app_tier }} at boot
   service:
-    name: "{{ app-tier }}"
+    name: "{{ app_tier }}"
     enabled: yes
 
 - name: create tomcat default web directory
@@ -20,4 +19,4 @@
     src: index.html.j2
     dest: "{{ tomcat_web_root }}/index.html"
     mode: 0644
-  notify: restart {{ app-tier }}
+  notify: restart {{ app_tier }}
