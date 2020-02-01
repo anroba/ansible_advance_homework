@@ -36,7 +36,7 @@
 
 - name: Output instances name
   debug:
-    msg: "Server is {{ item.instance.instance_name }}"
+    msg: "Server is {{ item.instance.name }}"
   loop: "{{ r_instances.results }}"
 
 
@@ -47,7 +47,7 @@
     cloud: ospcloud
     state: present
     reuse: yes
-    server: "{{ item.instance.instance_name }}"
+    server: "{{ item.instance.name }}"
     network: ext_network
     wait: true
     timeout: 180
