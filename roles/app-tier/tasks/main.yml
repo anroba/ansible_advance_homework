@@ -1,6 +1,7 @@
 ---
-- name: install {{ app-tier }}
-  yum:
+- name: Install {{ app-tier }}
+  package:
+#  yum:
     name: "{{ app-tier }}"
     state: latest
 
