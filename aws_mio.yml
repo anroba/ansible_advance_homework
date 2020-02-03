@@ -10,6 +10,6 @@
   tasks:
     - name: list aws instenaces
       ec2_instance_facts:
-#        region: "{{ aws_region }}"
+        region: "{{ aws_region }}"
       register: ec2_facts
 
