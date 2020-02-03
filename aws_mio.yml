@@ -1,5 +1,5 @@
 #- hosts: workstation
-- hosts: localhost
+- hosts: 
   become: true  
   connection: local
   gather_facts: false
