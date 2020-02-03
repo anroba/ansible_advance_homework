@@ -5,7 +5,7 @@
   
   
   vars:
-    aws_region: "us-west-2"
+    aws_region: "eu-central-1"
     
   tasks:
     - name: list aws instenaces
