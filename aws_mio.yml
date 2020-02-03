@@ -1,7 +1,17 @@
-#- hosts: workstation
-- hosts: localhost
-  become: true
-  gather_facts: false
+- name: pru
+  hosts: localhost
+  connection: local
+  gather_facts: no
+  
+  
+  vars:
+    aws_region: "eu-central-1"
+    
   tasks:
     - name: list aws instenaces
       ec2_instance_facts:
+        region: "{{ aws_region }}"
+        instance_ids:
+          - i-04d7b845c5dc1cd22
+      register: ec2_facts
+
