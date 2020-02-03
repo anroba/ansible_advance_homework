@@ -1,0 +1,7 @@
+#- hosts: workstation
+- hosts: localhost
+  become: true
+  gather_facts: false
+  tasks:
+    - name: list aws instenaces
+      ec2_instance_facts:
